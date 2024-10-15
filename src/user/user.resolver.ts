@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserModel } from './user.model';
 import { Md5 } from 'ts-md5';
+import { updateUserDto } from './user.dto';
 
 @Resolver()
 export class UserResolver {
@@ -32,5 +33,28 @@ export class UserResolver {
         email,
         password,
     });
+  }
+
+  @Mutation(() => UserModel, { name: 'updateUser' })
+  async updateUser(
+    @Args('id') id: number,
+    @Args('username', { nullable: true } ) username?: string,
+    @Args('email', { nullable: true } ) email?: string,
+    @Args('password', { nullable: true } ) password?: string,
+    @Args('phone', { nullable: true } ) phone?: string,
+    @Args('birthday', { nullable: true } ) birthday?: Date
+  ) {
+    const user = await this.userService.getUserById(id);
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+    const updateData: Partial<updateUserDto> = {};
+
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (password) updateData.password = Md5.hashStr(password);
+    if (phone) updateData.phone = phone;
+    if (birthday) updateData.birthday = birthday;
+    return this.userService.updateUser(id, updateData);
   }
 }
