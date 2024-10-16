@@ -57,4 +57,14 @@ export class UserResolver {
     if (birthday) updateData.birthday = birthday;
     return this.userService.updateUser(id, updateData);
   }
+
+  @Mutation(() => UserModel, { name: 'deleteUser' })
+  async deleteUser(@Args('id') id: number) {
+    const user = await this.userService.getUserById(id);
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    return this.userService.deleteUser(id);
+  }
 }

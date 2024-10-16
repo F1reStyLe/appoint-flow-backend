@@ -28,4 +28,13 @@ export class UserService {
         data: dto,
       });
     }
+
+    deleteUser(id: number) {
+      return this.prisma.user.update({
+        where: { id },
+        data: {
+          isActive: false,
+        }
+      });
+    }
 }
