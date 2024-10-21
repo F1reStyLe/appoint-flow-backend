@@ -51,7 +51,7 @@ model Order {
 model Menu {
   id          Int     @id @default(autoincrement())
   name        String
-  price       Int
+  price       Float
   image       String?
   description String?
   order       Order[]
