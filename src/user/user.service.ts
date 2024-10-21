@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { createUserDto, updateUserDto } from './user.dto';
+import { LoginDto } from '../auth/auth.dto';
 
 @Injectable()
 export class UserService {
@@ -8,6 +9,18 @@ export class UserService {
 
    allUsers() {
       return this.prisma.user.findMany();
+    }
+
+    getUser(dto: LoginDto) {
+      return this.prisma.user.findFirst({
+        where: {
+          OR: [
+            { email: dto.email },
+            { username: dto.username },
+            { phone: dto.phone },
+          ],
+        },
+      });
     }
 
     getUserById(id: number) {
