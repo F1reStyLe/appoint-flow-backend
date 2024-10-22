@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { MenuModule } from './menu/menu.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MenuModule } from './menu/menu.module';
       sortSchema: true,
     }),
     MenuModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -20,7 +20,7 @@ model User {
   lastname  String?
   email     String    @unique
   password  String
-  role      Role      @default(USER)
+  role      Role[]    @default([USER])
   avatar    String?
   phone     String?
   birthday  DateTime?
@@ -28,18 +28,18 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Order     Order[]
+  orders    Order[]
 
   @@index([username])
   @@map("users")
 }
 
 model Order {
-  id       Int    @id @default(autoincrement())
+  id       Int         @id @default(autoincrement())
   user_id  Int
-  user     User   @relation(fields: [user_id], references: [id])
+  user     User        @relation(fields: [user_id], references: [id])
   order_id Int
-  consists Menu[]
+  consists OrderMenu[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -49,16 +49,27 @@ model Order {
 }
 
 model Menu {
-  id          Int     @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   price       Float
   image       String?
   description String?
-  order       Order[]
+  order       OrderMenu[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([name])
   @@map("menu")
+}
+
+model OrderMenu {
+  orderId  Int   @map("order_id")
+  menuId   Int   @map("menu_id")
+  quantity Int
+  order    Order @relation(fields: [orderId], references: [id])
+  menuItem Menu  @relation(fields: [menuId], references: [id])
+
+  @@id([orderId, menuId])
+  @@index([orderId, menuId])
 }
