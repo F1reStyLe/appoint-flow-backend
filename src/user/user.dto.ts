@@ -1,23 +1,19 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { IsDate, IsString } from 'class-validator';
 
-
-enum Role {
-  ADMIN,
-  USER
-}
-
-export class createUserDto {
-  @IsString()
+@InputType()
+class createUserDto {
+  @Field()
   username: string;
 
-  @IsString()
+  @Field()
   email: string;
 
-  @IsString()
+  @Field()
   password: string;
 }
 
-export class updateUserDto {
+class updateUserDto {
   @IsString()
   username?: string;
 
@@ -33,3 +29,5 @@ export class updateUserDto {
   @IsDate()
   birthday?: Date;
 }
+
+export { createUserDto, updateUserDto };

@@ -1,17 +1,8 @@
 import { Field, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 
 
-enum Role {
-  ADMIN,
-  USER
-}
-
-registerEnumType(Role, {
-  name: 'Role',
-});
-
 @ObjectType()
-export class UserModel {
+class UserModel {
   @Field(() => Int)
   id: number;
 
@@ -27,9 +18,6 @@ export class UserModel {
   @Field(() => String)
   phone: string;
 
-  @Field(() => Role)
-  role: Role;
-
   @Field(() => Date)
   birthday: Date;
 
@@ -40,3 +28,4 @@ export class UserModel {
   updatedAt: Date;
 }
 
+export { UserModel };

@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 enum OrderStatus {
   PENDING
   AWAITING_PAYMENT
@@ -45,11 +40,19 @@ model User {
   @@map("users")
 }
 
+model Roles {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  userRole UserRole[]
+}
+
 model UserRole {
-  id      Int  @id @default(autoincrement())
-  user_id Int  @map("user_id")
-  userId  User @relation(fields: [user_id], references: [id])
-  role    Role @default(USER)
+  id      Int   @id @default(autoincrement())
+  user_id Int   @map("user_id")
+  role_id Int   @map("role_id")
+  user    User  @relation(fields: [user_id], references: [id])
+  role    Roles @relation(fields: [role_id], references: [id])
 
   @@index([user_id])
   @@map("users_roles")

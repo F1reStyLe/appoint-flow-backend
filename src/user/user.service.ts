@@ -28,11 +28,22 @@ export class UserService {
         where: { id },
       });
     }
-  
-    createUser(dto: createUserDto) {
-      return this.prisma.user.create({
-        data: dto,
-      });
+
+    async createUser(dto: createUserDto) {
+      return await this.prisma.$transaction(async (prisma) => {
+        const newUser = await prisma.user.create({
+          data: {
+            ...dto,
+            roles: {
+              create: {
+                role_id: 1
+              }
+            }
+          },
+        });
+
+        return newUser;
+      })
     }
 
     updateUser(id: number, dto: Partial<updateUserDto>) {

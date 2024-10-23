@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserModel } from './user.model';
 import { Md5 } from 'ts-md5';
-import { updateUserDto } from './user.dto';
+import { createUserDto, updateUserDto } from './user.dto';
 
 @Resolver()
 export class UserResolver {
@@ -24,15 +24,10 @@ export class UserResolver {
 
   @Mutation(() => UserModel, { name: 'createUser' })
   async createUser(
-    @Args('username') username: string,
-    @Args('email') email: string,
-    @Args('password') password: string) {
-      password = Md5.hashStr(password);
-      return this.userService.createUser({
-        username,
-        email,
-        password,
-    });
+    @Args('createUserDto') createUserDto: createUserDto
+  ) {
+    createUserDto.password = Md5.hashStr(createUserDto.password);
+    return this.userService.createUser(createUserDto);
   }
 
   @Mutation(() => UserModel, { name: 'updateUser' })
