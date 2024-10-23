@@ -12,19 +12,30 @@ enum Role {
   ADMIN
 }
 
+enum OrderStatus {
+  PENDING
+  AWAITING_PAYMENT
+  PAYMENT_CONFIRMED
+  PROCESSING
+  ON_THE_WAY
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
 model User {
   id Int @id @default(autoincrement())
 
-  username  String    @unique
+  username  String     @unique
   firstname String?
   lastname  String?
-  email     String    @unique
+  email     String     @unique
   password  String
-  role      Role[]    @default([USER])
   avatar    String?
   phone     String?
   birthday  DateTime?
-  isActive  Boolean   @default(true) @map("is_active")
+  isActive  Boolean    @default(true) @map("is_active")
+  roles     UserRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,12 +45,23 @@ model User {
   @@map("users")
 }
 
+model UserRole {
+  id      Int  @id @default(autoincrement())
+  user_id Int  @map("user_id")
+  userId  User @relation(fields: [user_id], references: [id])
+  role    Role @default(USER)
+
+  @@index([user_id])
+  @@map("users_roles")
+}
+
 model Order {
-  id       Int         @id @default(autoincrement())
-  user_id  Int
-  user     User        @relation(fields: [user_id], references: [id])
-  order_id Int
-  consists OrderMenu[]
+  id          Int         @id @default(autoincrement())
+  user_id     Int
+  user        User        @relation(fields: [user_id], references: [id])
+  order_id    Int
+  orderStatus OrderStatus @default(PENDING) @map("order_status")
+  consists    OrderMenu[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
