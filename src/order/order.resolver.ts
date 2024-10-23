@@ -1,11 +1,28 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { OrderModel } from './order.model';
-import { createOrderDto } from './order.dto';
+import { createOrderDto, findOrderDto } from './order.dto';
 
 @Resolver(() => OrderModel)
 export class OrderResolver {
   constructor(private readonly orderService: OrderService) {}
+
+  @Query(() => [OrderModel], { name: 'findorder' })
+  async findOrder(
+    @Args('orderId', { nullable: true }) orderId?: number,
+    @Args('userId', { nullable: true }) userId?: number,
+    @Args('createdAt', { nullable: true } ) createdAt?: Date,
+    @Args('comSign', { nullable: true } ) comSign?: string,
+  ): Promise<OrderModel[]> {
+    const findData: Partial<findOrderDto> = {};
+
+    if (orderId) findData.orderId = orderId;
+    if (userId) findData.userId = userId;
+    if (createdAt) findData.createdAt = createdAt;
+    if (comSign) findData.comSign = comSign;
+
+    return this.orderService.findOrder(findData);
+  }
 
   @Mutation(() => OrderModel, { name: 'createOrder' })
   async createOrder(

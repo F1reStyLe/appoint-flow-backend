@@ -1,7 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
-export class createOrderDto {
+class createOrderDto {
   @Field()
   userId: number;
 
@@ -17,3 +17,19 @@ class MenuItemInput {
   @Field()
   quantity: number;
 }
+
+class findOrderDto {
+  @Field({ nullable: true })
+  orderId?: number;
+
+  @Field({ nullable: true })
+  userId?: number;
+
+  @Field({ nullable: true })
+  createdAt?: Date;
+
+  @Field({ nullable: true })
+  comSign?: string;
+}
+
+export { createOrderDto, findOrderDto };
