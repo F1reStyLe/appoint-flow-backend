@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { OrderModel } from './order.model';
-import { createOrderDto, findOrderDto } from './order.dto';
+import { createOrderDto, findOrderDto, updateOrderDto } from './order.dto';
 
 @Resolver(() => OrderModel)
 export class OrderResolver {
@@ -29,5 +29,14 @@ export class OrderResolver {
     @Args('createOrderDto') createOrderDto: createOrderDto,
   ): Promise<OrderModel> {
     return this.orderService.createOrder(createOrderDto);
+  }
+
+  @Mutation(() => OrderModel, { name: 'updateOrder' })
+  async updateOrder(
+    @Args('updateOrderDto') updateOrderDto: updateOrderDto,
+  ): Promise<OrderModel> {
+    if (!updateOrderDto.newMenuId) updateOrderDto.newMenuId = updateOrderDto.menuId;
+
+    return this.orderService.updateOrder(updateOrderDto);
   }
 }

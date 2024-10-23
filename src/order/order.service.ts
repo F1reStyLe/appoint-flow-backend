@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createOrderDto, findOrderDto } from './order.dto';
+import { createOrderDto, findOrderDto, updateOrderDto } from './order.dto';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -108,6 +108,53 @@ export class OrderService {
               createdAt: order.createdAt,
               updatedAt: order.updatedAt,
         };
+    });
+  }
+
+  async updateOrder(dto: updateOrderDto) {
+    return await this.prisma.$transaction(async (prisma) => {
+      await prisma.orderMenu.update({
+        where: {
+          orderId_menuId: {
+            orderId: dto.orderId,
+            menuId: dto.menuId
+          }
+        },
+        data: {
+          quantity: dto.quantity,
+          menuId: dto.newMenuId
+        }
+      });
+
+      const completeOrder = await prisma.order.findUnique({
+        where: {
+          id: dto.orderId
+        },
+        include: {
+          consists: {
+            include: {
+              menuItem: {
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                }
+              }
+            },
+          },
+          user: true,
+        }
+      });
+
+      return {
+        id: completeOrder.id,
+        userId: completeOrder.user_id,
+        orderId: completeOrder.order_id,
+        consists: completeOrder.consists,
+        user: completeOrder.user,
+        createdAt: completeOrder.createdAt,
+        updatedAt: completeOrder.updatedAt
+      };
     });
   }
 }

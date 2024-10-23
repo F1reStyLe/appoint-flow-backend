@@ -32,4 +32,19 @@ class findOrderDto {
   comSign?: string;
 }
 
-export { createOrderDto, findOrderDto };
+@InputType()
+class updateOrderDto {
+  @Field()
+  orderId: number;
+
+  @Field()
+  menuId: number;
+
+  @Field()
+  quantity: number;
+
+  @Field({ nullable: true })
+  newMenuId?: number;
+}
+
+export { createOrderDto, findOrderDto, updateOrderDto };
