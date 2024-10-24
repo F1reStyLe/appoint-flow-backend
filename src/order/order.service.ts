@@ -157,4 +157,14 @@ export class OrderService {
       };
     });
   }
+
+  async deleteOrder(orderId: number) {
+    return await this.prisma.$transaction(async (prisma) => {
+      return await prisma.order.delete({
+        where: {
+          id: orderId
+        },
+      });
+    })
+  }
 }

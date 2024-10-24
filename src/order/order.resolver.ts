@@ -39,4 +39,11 @@ export class OrderResolver {
 
     return this.orderService.updateOrder(updateOrderDto);
   }
+
+  @Mutation(() => OrderModel, { name: 'deleteOrder' })
+  async deleteOrder(
+    @Args('orderId') orderId: number,
+  ): Promise<OrderModel> {
+    return this.orderService.deleteOrder(orderId);
+  }
 }

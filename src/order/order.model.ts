@@ -39,13 +39,13 @@ export class OrderModel {
   id: number;
 
   @Field()
-  userId: number;
+  userId?: number;
 
   @Field(() => User)
-  user: User;
+  user?: User;
 
   @Field(() => [OrderMenuItem])
-  consists: OrderMenuItem[];
+  consists?: OrderMenuItem[];
 
   @Field()
   createdAt: Date;

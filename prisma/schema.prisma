@@ -92,9 +92,10 @@ model OrderMenu {
   orderId  Int   @map("order_id")
   menuId   Int   @map("menu_id")
   quantity Int
-  order    Order @relation(fields: [orderId], references: [id])
+  order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   menuItem Menu  @relation(fields: [menuId], references: [id])
 
   @@id([orderId, menuId])
   @@index([orderId, menuId])
+  @@map("order_menu")
 }
