@@ -41,10 +41,13 @@ model User {
 }
 
 model Roles {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  permissions Int    @default(1)
 
   userRole UserRole[]
+
+  @@map("roles")
 }
 
 model UserRole {
@@ -52,7 +55,7 @@ model UserRole {
   user_id Int   @map("user_id")
   role_id Int   @map("role_id")
   user    User  @relation(fields: [user_id], references: [id])
-  role    Roles @relation(fields: [role_id], references: [id])
+  role    Roles @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("users_roles")

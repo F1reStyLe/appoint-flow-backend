@@ -31,12 +31,18 @@ export class UserService {
 
     async createUser(dto: createUserDto) {
       return await this.prisma.$transaction(async (prisma) => {
+        const roleUser = await prisma.roles.findFirst({
+          where: {
+            name: 'USER'
+          }
+        });
+
         const newUser = await prisma.user.create({
           data: {
             ...dto,
             roles: {
               create: {
-                role_id: 1
+                role_id: roleUser.id
               }
             }
           },

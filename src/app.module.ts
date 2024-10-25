@@ -8,6 +8,7 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { MenuModule } from './menu/menu.module';
 import { OrderModule } from './order/order.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { OrderModule } from './order/order.module';
     }),
     MenuModule,
     OrderModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
