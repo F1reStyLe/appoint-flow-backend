@@ -67,9 +67,21 @@ export class RoleResolver {
     const roleId = await this.checkRole(GrantRoleDto);
     const userId = await this.userService.getUser(GrantRoleDto);
 
-    if(!roleId) { throw new Error('Role not found'); }
+    if (!userId) { throw new Error('User not found'); }
 
     return this.roleService.grantRoleToUser(roleId, userId.id);
+  }
+
+  @Mutation(() => GrantRoleModel, { name: 'revokeRoleFromUser' })
+  async revokeRoleFromUser(
+    @Args('GrantRoleDto') GrantRoleDto: GrantRoleDto
+  ) {
+    const roleId = await this.checkRole(GrantRoleDto);
+    const userId = await this.userService.getUser(GrantRoleDto);
+
+    if (!userId) { throw new Error('User not found'); }
+
+    return this.roleService.revokeRoleFromUser(roleId, userId.id);
   }
 
   async checkRole(dto: RoleDto | GrantRoleDto): Promise<number|never> {

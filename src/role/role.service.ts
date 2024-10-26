@@ -72,4 +72,23 @@ export class RoleService {
       return role;
     })
   }
+
+  async revokeRoleFromUser(roleId: number, userId: number) {
+    return await this.prisma.$transaction(async (prisma) => {
+      const role = await prisma.userRole.delete({
+        where: {
+          user_id_role_id: {
+            role_id: roleId,
+            user_id: userId
+          }
+        },
+        include: {
+          role: true,
+          user: true
+        }
+      });
+
+      return role;
+    });
+  }
 }
