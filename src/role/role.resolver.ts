@@ -1,11 +1,15 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { RoleService } from './role.service';
-import { RoleModel } from './role.model';
-import { createRoleDto, RoleDto } from './role.dto';
+import { GrantRoleModel, RoleModel } from './role.model';
+import { createRoleDto, GrantRoleDto, RoleDto } from './role.dto';
+import { UserService } from '../user/user.service';
 
 @Resolver()
 export class RoleResolver {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(
+    private readonly roleService: RoleService,
+    private readonly userService: UserService
+  ) {}
 
   @Query(() => [RoleModel], { name: 'roles' })
   async getRoles(): Promise<RoleModel[]> {
@@ -33,7 +37,7 @@ export class RoleResolver {
     return this.roleService.createRole(createRoleDto);
   }
 
-  @Mutation(() => RoleModel, { name: 'updateRole' })
+  @Mutation(() => [RoleModel], { name: 'updateRole' })
   async updateRole(
     @Args('updateRoleDto') updateRoleDto: RoleDto
   ): Promise<RoleModel> {
@@ -56,7 +60,19 @@ export class RoleResolver {
     return this.roleService.deleteRole(roleId);
   }
 
-  async checkRole(dto: RoleDto): Promise<number|never> {
+  @Mutation(() => GrantRoleModel, { name: 'grantRoleToUser' })
+  async grantRoleToUser(
+    @Args('GrantRoleDto') GrantRoleDto: GrantRoleDto
+  ) {
+    const roleId = await this.checkRole(GrantRoleDto);
+    const userId = await this.userService.getUser(GrantRoleDto);
+
+    if(!roleId) { throw new Error('Role not found'); }
+
+    return this.roleService.grantRoleToUser(roleId, userId.id);
+  }
+
+  async checkRole(dto: RoleDto | GrantRoleDto): Promise<number|never> {
     if (!dto.name && !dto.id) {
       throw new Error('Invalid data, please provide a valid id or name');
     }

@@ -55,4 +55,21 @@ export class RoleService {
       where: { id: id },
     });
   }
+
+  async grantRoleToUser(roleId: number, userId: number) {
+    return await this.prisma.$transaction(async (prisma) => {
+      const role = await prisma.userRole.create({
+        data: {
+          role_id: roleId,
+          user_id: userId
+        },
+        include: {
+          role: true,
+          user: true
+        }
+      });
+
+      return role;
+    })
+  }
 }

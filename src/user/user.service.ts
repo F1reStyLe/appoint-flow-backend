@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { createUserDto, updateUserDto } from './user.dto';
 import { LoginDto } from '../auth/auth.dto';
+import { GrantRoleDto } from '../role/role.dto';
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,7 @@ export class UserService {
       return this.prisma.user.findMany();
     }
 
-    getUser(dto: LoginDto) {
+    getUser(dto: LoginDto | GrantRoleDto) {
       return this.prisma.user.findFirst({
         where: {
           OR: [

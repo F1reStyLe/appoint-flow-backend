@@ -57,6 +57,7 @@ model UserRole {
   user    User  @relation(fields: [user_id], references: [id])
   role    Roles @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
+  @@unique([user_id, role_id])
   @@index([user_id])
   @@map("users_roles")
 }
