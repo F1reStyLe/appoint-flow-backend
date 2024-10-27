@@ -21,7 +21,6 @@ export class AuthResolver {
     if (phone) authUserData.phone = phone;
     if (username) authUserData.username = username;
 
-    const token = await this.AuthService.login(authUserData);
-    return { token: token.token };
+    return await this.AuthService.login(authUserData);
   }
 }

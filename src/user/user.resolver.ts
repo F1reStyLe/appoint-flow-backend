@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserModel } from './user.model';
-import { Md5 } from 'ts-md5';
+import * as bcrypt from 'bcrypt';
 import { createUserDto, updateUserDto } from './user.dto';
 
 @Resolver()
@@ -26,7 +26,7 @@ export class UserResolver {
   async createUser(
     @Args('createUserDto') createUserDto: createUserDto
   ) {
-    createUserDto.password = Md5.hashStr(createUserDto.password);
+    createUserDto.password = await bcrypt.hash(createUserDto.password, 10);;
     return this.userService.createUser(createUserDto);
   }
 
@@ -47,7 +47,7 @@ export class UserResolver {
 
     if (username) updateData.username = username;
     if (email) updateData.email = email;
-    if (password) updateData.password = Md5.hashStr(password);
+    if (password) updateData.password = bcrypt(password, 10);
     if (phone) updateData.phone = phone;
     if (birthday) updateData.birthday = birthday;
     return this.userService.updateUser(id, updateData);

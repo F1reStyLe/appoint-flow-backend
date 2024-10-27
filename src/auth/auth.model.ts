@@ -3,5 +3,17 @@ import { ObjectType, Field } from '@nestjs/graphql';
 @ObjectType()
 export class AuthModel {
   @Field()
-  token: string;
+  id: number;
+
+  @Field()
+  username?: string;
+
+  @Field()
+  email?: string;
+
+  @Field()
+  phone?: string;
+
+  @Field()
+  token?: string;
 }
